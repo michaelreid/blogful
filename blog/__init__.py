@@ -8,6 +8,8 @@
 #
 ####
 
+# import os to obtain OS variables
+import os
 # import the Flask class from Flask module
 from flask import Flask
 

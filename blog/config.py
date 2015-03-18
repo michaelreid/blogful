@@ -5,7 +5,7 @@
 # set the 'secret_key' variable to secure the calls to database
 # note that key is not stored in DevConfig but in os.environ variable
 import os
-class DevelopmentConfig(object)
+class DevelopmentConfig(object):
     SQLALCHEMY_DATABASE_URI = "postgresql://action@localhost:5432/blogful"
-    DEBUG = TRUE
+    DEBUG = True
     SECRET_KEY = os.environ.get("BLOGFUL_SECRET_KEY", "")
