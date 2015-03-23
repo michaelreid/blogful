@@ -7,3 +7,5 @@ env/
 blog/#*
 *.pyc
 blog/*.pyc
+blog/templates/#_*
+blog/templates/#*

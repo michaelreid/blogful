@@ -44,6 +44,19 @@ def posts(page=1, paginate_by=10):
                            total_pages=total_pages
     )
 
+# define view for single post
+@app.route("/post/<id>")
+def single_post(id):
+    id = int(request.url[-1])
+    post = session.query(Post.id == id)
+    return render_template("single_post.html",
+                           post=post
+    )
+
+
+
+
+
 # define view for viewing Post form
 # the 'methods' argument in the decorator 
 # defines this as only for GET calls to this view
@@ -58,6 +71,28 @@ from flask import request, redirect, url_for
 
 @app.route("/post/add", methods=["POST"])
 def add_post_post():
+    post = Post(
+        title=request.form["title"],
+        content=mistune.markdown(request.form["content"]),
+    )
+    session.add(post)
+    session.commit()
+    return redirect(url_for("posts"))
+
+# define view for editing Post form
+# the 'methods' argument in the decorator 
+# defines this as only for GET calls to this view
+@app.route("/post/<id>/edit", methods=["GET"])
+def edit_post_get():
+    return render_template("edit_post.html")
+
+
+# now define POST method for /post/add
+import mistune
+from flask import request, redirect, url_for
+
+@app.route("/post/<id>/edit", methods=["POST"])
+def edit_post_post():
     post = Post(
         title=request.form["title"],
         content=mistune.markdown(request.form["content"]),
