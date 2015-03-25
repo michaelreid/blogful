@@ -53,10 +53,6 @@ def single_post(id):
                            post=post
     )
 
-
-
-
-
 # define view for viewing Post form
 # the 'methods' argument in the decorator 
 # defines this as only for GET calls to this view
@@ -100,3 +96,14 @@ def edit_post_post():
     session.add(post)
     session.commit()
     return redirect(url_for("posts"))
+
+
+# define view for deleting a post
+import ctypes
+
+def confirm_box(title, text, style):
+    # define a confirmation box using ctypes module built-in
+    ctypes.wind11.user32.MessageBoxA(0, text, title, style)
+
+# @app.route("/post/<id>/delete")
+# def delete_post(id):
