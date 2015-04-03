@@ -8,6 +8,16 @@ from blog import app
 from .database import session
 from .models import Post
 
+@app.context_processor
+def single_post():
+    return dict(single_post=True)
+
+
+
+###############################################
+      # # # VIEW ALL POSTS # # #
+###############################################    
+
 # define the first view:
 @app.route("/")
 @app.route("/page/<int:page>")
@@ -41,25 +51,31 @@ def posts(page=1, paginate_by=10):
                            has_next=has_next,
                            has_prev=has_prev,
                            page=page,
-                           total_pages=total_pages
+                           total_pages=total_pages,
     )
 
+
+###############################################
+      # # # VIEW SINGLE POSTS # # #
+###############################################    
 # define view for single post
-@app.route("/post/<id>")
+@app.route("/post/<int:id>")
 def single_post(id):
-    id = int(request.url[-1])
-    post = session.query(Post.id == id)
+    post = session.query(Post).get(id)
+    print post
     return render_template("single_post.html",
                            post=post
     )
 
-# define view for viewing Post form
+
+###############################################
+      # # # ADDING POSTS # # #
+###############################################    
+# Define view for adding Posts, a form
 # the 'methods' argument in the decorator 
-# defines this as only for GET calls to this view
 @app.route("/post/add", methods=["GET"])
 def add_post_get():
     return render_template("add_post.html")
-
 
 # now define POST method for /post/add
 import mistune
@@ -75,35 +91,55 @@ def add_post_post():
     session.commit()
     return redirect(url_for("posts"))
 
-# define view for editing Post form
+
+###############################################
+      # # # EDITING POSTS # # #
+###############################################    
+# Define view for editing Post form
 # the 'methods' argument in the decorator 
 # defines this as only for GET calls to this view
 @app.route("/post/<id>/edit", methods=["GET"])
-def edit_post_get():
-    return render_template("edit_post.html")
+def edit_post_get(id):
+    post = session.query(Post).get(id)
+    return render_template("edit_post.html", post=post)
 
 
-# now define POST method for /post/add
+# now define POST method for /post/add to save
+# the post to database
 import mistune
 from flask import request, redirect, url_for
 
 @app.route("/post/<id>/edit", methods=["POST"])
-def edit_post_post():
-    post = Post(
-        title=request.form["title"],
-        content=mistune.markdown(request.form["content"]),
-    )
-    session.add(post)
+def edit_post_post(id):
+    post = session.query(Post).get(id)
+
+    post.title = request.form["title"]
+
+    post.content=mistune.markdown(request.form["content"])
+    
     session.commit()
     return redirect(url_for("posts"))
 
+    
+###############################################
+      # # # DELETING POSTS # # #
+###############################################    
 
-# define view for deleting a post
-import ctypes
+from flask import flash
 
-def confirm_box(title, text, style):
-    # define a confirmation box using ctypes module built-in
-    ctypes.wind11.user32.MessageBoxA(0, text, title, style)
+# define view for deleting a post - flash
+# message asking user that they want to delete
+# the current post
+@app.route("/post/<id>/delete")
+def delete_post(id):
+    post = session.query(Post).get(id)
+    flash("Are you sure you want to delete this post?", category='warning')
+    return render_template("single_post.html",
+                           post=post
+    )
 
-# @app.route("/post/<id>/delete")
-# def delete_post(id):
+@app.route('/post/<id>/confirm_delete')
+def confirm_delete(id):
+    session.query(Post).get(id).delete(synchronize_session=False)
+    session.commit()
+    return redirect(url_for('posts'))

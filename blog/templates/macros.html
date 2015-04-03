@@ -1,6 +1,7 @@
-# declare a render_post macro that takes a post as argument
+{# declare a render_post macro that takes a post as argument #}
 {% macro render_post(post) %}
-
+{# import the posts.html page to access the single_post variable #}
+{% import 'posts.html' as posts %}
 
 <div class="row">
   <div class="col-md-2 text-right metadata">

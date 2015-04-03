@@ -3,6 +3,32 @@
 
 {% block content %}
 
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+<div class="flashes">
+  {% for message in messages %}
+  <p>{{ message }}</p>
+  {% endfor %}
+  <a href="{{ url_for('confirm_delete', id=post.id) }}">Confirm</a>
+  <a href="{{ url_for('single_post', id=post.id) }}">Cancel</a>
+</div>
+{% endif %}
+{% endwith %}
+
 {{ macros.render_post(post) }}
+
+<div class="footer">
+
+  <ul class="pager">
+
+  <li class="previous">
+  <a href="{{ url_for('posts') }}">&larr; Back</a>
+  </li>
+
+   <li class="tiny"><a href="{{ url_for('edit_post_get', id=post.id ) }}">edit</a></li> 
+   <li class="tiny"><a href="{{ url_for('delete_post', id=post.id) }}">delete</a></li>
+  </ul>
+ 
+</div>
 
 {% endblock %}
