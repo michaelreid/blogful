@@ -109,6 +109,7 @@ def add_post_post():
 # defines this as only for GET calls to this view
 
 @app.route("/post/<id>/edit", methods=["GET"])
+@login_required    
 def edit_post_get(id):
     post = session.query(Post).get(id)
     return render_template("edit_post.html", post=post)
@@ -120,6 +121,7 @@ import mistune
 from flask import request, redirect, url_for
 
 @app.route("/post/<id>/edit", methods=["POST"])
+@login_required
 def edit_post_post(id):
     post = session.query(Post).get(id)
 
@@ -141,6 +143,7 @@ from flask import flash
 # message asking user that they want to delete
 # the current post
 @app.route("/post/<id>/delete")
+@login_required
 def delete_post(id):
     post = session.query(Post).get(id)
     flash("Are you sure you want to delete this post?", category='warning')
@@ -149,6 +152,7 @@ def delete_post(id):
     )
 
 @app.route('/post/<id>/confirm_delete')
+@login_required    
 def confirm_delete(id):
     session.query(Post).get(id).delete(synchronize_session=False)
     session.commit()

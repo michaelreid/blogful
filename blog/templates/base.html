@@ -22,20 +22,20 @@
         <nav class="navbar navbar-default navbar-static-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <!--    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="{{ url_for('posts') }}">words.</a>  
-                </div>
-                <div class="collapse navbar-collapse metadata">
+                    </button> -->
+                      <a class="navbar-brand" href="{{ url_for('posts') }}">words.</a>
+		</div>
+             <!--  <div class="col-md-10 collapse navbar-collapse metadata">
                   <ul class="nav navbar-nav navbar-right">
-		    <li class="tiny"><a href="#">edit</a></li>
-		    <li class="tiny"><a href="#">login</a></li>
+		    <li class="small"><a href="#">edit</a></li>
+		    <li class="small"><a href="#">login</a></li>
                   </ul>
-                </div>
+                </div> -->
             </div>
         </nav>
 	{% with messages = get_flashed_messages(with_categories=true) %}

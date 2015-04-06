@@ -2,24 +2,33 @@
 {% extends "base.html" %}
 {% block content %}
 
+
 {% for post in posts %}
-{{ macros.render_post(post) }}
+
+{{ macros.render_titles(post) }}
 {% endfor %}
 
 {% endblock %}
 
 
+
+
+
+
 {% block footer %}
 
-
-<ul class="pager">
+<ul class="col-md-6 list-unstyled pager">
   {% if has_next %}
   <li class="previous">
   <a href="{{ url_for('posts', page=page + 1) }}" class="text-muted small">&larr; Older</a>
   </li>
   {% endif %}
+  
+  <li class="small col-md-4"><a href="{{ url_for('login_get') }}">log-in</a></li>
+  <li class="small col-md-4"><a href="{{ url_for('add_post_get') }}">+post</a></li>
+
   {% if has_prev %}
-  <li class="next">
+  <li class="text-right next">
   <a href="{{ url_for('posts', page=page - 1) }}" class="text-muted small">Newer &rarr;</a>
   </li>
   {% endif %}

@@ -1,10 +1,23 @@
-div.metadata {
-    font-size: 1.5em;
+/* Defining site wide styles
+--------------------------------------------------- */
+.container {
+    width: 60%;
+}
+
+h1 {
+    margin-top: 10px;
+    font-weight: 100;
+    font-size: 20px;
+}
+
+ul {
+    margin-top: 9px;
 }
 
 .tiny {
     font-size: .5em;
 }
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -12,10 +25,12 @@ html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -25,6 +40,15 @@ body {
     background-color: #ffffff;
 }
 
-.container {
-    width: 70%;
+
+/* Custom CSS for custom classes
+----------------------------------------------------- */
+div.metadata {
+    font-size: 13px;
+    font-weight: 200;
+}
+
+.pager li>a {
+    padding: 0;
+    border: none;
 }

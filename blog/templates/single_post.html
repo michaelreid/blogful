@@ -22,10 +22,13 @@
 
 {% block footer %}
 
-
-<p class="previous small">
-   <a href="{{ url_for('posts') }}" class="text=muted">&larr; Back</a>
-</p>
+<ul class="col-md-6 list-unstyled pager">
+  <li class="previous small">
+    <a href="{{ url_for('posts') }}" class="text=muted">&larr; Back</a>
+  </li>
+  <li class="small col-md-4"><a href="{{ url_for('edit_post_get', id=post.id) }}">edit</a></li>
+  <li class="small col-md-4"><a href="{{ url_for('delete_post', id=post.id) }}">-delete post</a></li>
+</ul>
 
 
 {% endblock %}

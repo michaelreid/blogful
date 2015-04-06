@@ -1,24 +1,45 @@
 {# declare a render_post macro that takes a post as argument #}
-{% macro render_post(post) %}
+{% macro render_titles(post) %}
 {# import the posts.html page to access the single_post variable #}
 {% import 'posts.html' as posts %}
 
 <div class="row">
-  <div class="col-md-2 text-right metadata">
+  <div class="col-md-1 metadata">
     <ul class="list-unstyled">
-      <li>
-	{{ post.datetime | dateformat("%d/%m/%y") }}
-	{{ post.author.name }}
-      </li>
+      <li>{{ post.datetime | dateformat("%d/%m/%y") }}</li>
+      <li>{{ post.author.name }}</li>
     </ul>
   </div>
 
 
-  <div class="col-md-10">
+  <div class="col-md-11">
     <h1>
       <a href="/post/{{ post.id }}">{{ post.title }}</a>
     </h1>
-    {{ post.content | safe }}
+  </div>
+</div>
+
+{% endmacro %}
+
+
+
+{% macro render_post(post) %}
+
+{# import the posts.html page to access the single_post variable #}
+{% import 'posts.html' as posts %}
+
+<div class="row">
+  <div class="col-md-1 metadata">
+    <ul class="list-unstyled">
+      <li>{{ post.datetime | dateformat("%d/%m/%y") }}</li>
+      <li>{{ post.author.name }} </li>
+    </ul>
+  </div>
+
+
+  <div class="col-md-11">
+    <h1>{{ post.title }}</h1>
+     {{ post.content | safe }}
   </div>
 </div>
 
