@@ -5,7 +5,7 @@
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-<div class="flashes">
+<div class="flashes danger">
   {% for message in messages %}
   <p>{{ message }}</p>
   {% endfor %}

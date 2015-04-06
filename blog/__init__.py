@@ -25,3 +25,5 @@ from . import filters # import Jinja filters
 # both views and filters come after the app has been created as
 # they make use of the object
 
+# add the login system
+from . import login
