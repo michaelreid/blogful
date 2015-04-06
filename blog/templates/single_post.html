@@ -17,18 +17,15 @@
 
 {{ macros.render_post(post) }}
 
-<div class="footer">
+{% endblock %}
 
-  <ul class="pager">
 
-  <li class="previous">
-  <a href="{{ url_for('posts') }}">&larr; Back</a>
-  </li>
+{% block footer %}
 
-   <li class="tiny"><a href="{{ url_for('edit_post_get', id=post.id ) }}">edit</a></li> 
-   <li class="tiny"><a href="{{ url_for('delete_post', id=post.id) }}">delete</a></li>
-  </ul>
- 
-</div>
+
+<p class="previous small">
+   <a href="{{ url_for('posts') }}" class="text=muted">&larr; Back</a>
+</p>
+
 
 {% endblock %}

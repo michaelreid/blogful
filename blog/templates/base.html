@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Blogful</title>
+        <title>words.</title>
 	<!-- CSS -->
         <!-- Bootstrap -->
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -19,7 +19,7 @@
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     </head>
      <body>
-        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -28,15 +28,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url_for('posts') }}">Blogful</a>  
+                    <a class="navbar-brand" href="{{ url_for('posts') }}">words.</a>  
                 </div>
                 <div class="collapse navbar-collapse metadata">
-                  <ul class="nav navbar-nav navbar-right">		  
-		    
+                  <ul class="nav navbar-nav navbar-right">
+		    <li class="tiny"><a href="#">edit</a></li>
+		    <li class="tiny"><a href="#">login</a></li>
                   </ul>
                 </div>
             </div>
-        </div>
+        </nav>
 	{% with messages = get_flashed_messages(with_categories=true) %}
 	{% if messages %}
 	{% for category, message in messages %}
@@ -49,5 +50,10 @@
         <div class="container">
             {% block content %}{% endblock %}
         </div>
+	<footer class="footer">
+	  <div class="container">
+	    {% block footer %}{% endblock %}
+	  </div>
+	</footer>
     </body>
 </html>

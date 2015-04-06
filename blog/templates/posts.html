@@ -6,17 +6,24 @@
 {{ macros.render_post(post) }}
 {% endfor %}
 
+{% endblock %}
+
+
+{% block footer %}
+
+
 <ul class="pager">
   {% if has_next %}
   <li class="previous">
-  <a href="{{ url_for('posts', page=page + 1) }}">&larr; Older</a>
+  <a href="{{ url_for('posts', page=page + 1) }}" class="text-muted small">&larr; Older</a>
   </li>
   {% endif %}
   {% if has_prev %}
   <li class="next">
-  <a href="{{ url_for('posts', page=page - 1) }}">&rarr; Newer</a>
+  <a href="{{ url_for('posts', page=page - 1) }}" class="text-muted small">Newer &rarr;</a>
   </li>
   {% endif %}
 </ul>
+
 
 {% endblock %}

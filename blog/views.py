@@ -73,19 +73,28 @@ def single_post(id):
 ###############################################    
 # Define view for adding Posts, a form
 # the 'methods' argument in the decorator 
+# and protect posts by requiring login
+from flask.ext.login import login_required
+
+
 @app.route("/post/add", methods=["GET"])
+@login_required
 def add_post_get():
     return render_template("add_post.html")
 
 # now define POST method for /post/add
 import mistune
-from flask import request, redirect, url_for
+from flask           import request, redirect, url_for
+from flask.ext.login import current_user
+
 
 @app.route("/post/add", methods=["POST"])
+@login_required
 def add_post_post():
     post = Post(
         title=request.form["title"],
         content=mistune.markdown(request.form["content"]),
+        author=current_user
     )
     session.add(post)
     session.commit()
@@ -99,10 +108,7 @@ def add_post_post():
 # the 'methods' argument in the decorator 
 # defines this as only for GET calls to this view
 
-from flask.ext.login import login_required
-
 @app.route("/post/<id>/edit", methods=["GET"])
-@login.required
 def edit_post_get(id):
     post = session.query(Post).get(id)
     return render_template("edit_post.html", post=post)
@@ -114,7 +120,6 @@ import mistune
 from flask import request, redirect, url_for
 
 @app.route("/post/<id>/edit", methods=["POST"])
-@login.required
 def edit_post_post(id):
     post = session.query(Post).get(id)
 

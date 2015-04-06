@@ -61,6 +61,18 @@ def adduser():
     session.add(user)
     session.commit()
 
+# add database migration commands to flask app
+# using Alembic as part of SQLAlchemy to handle database migrations
+# and integrates well with Flask-Migrate wrapper    
+from flask.ext.migrate import Migrate, MigrateCommand
+from blog.database      import Base    
+
+class DB(object):                   # create a new class called DB to hold DB object.
+    def __init__(self, metadata):   # Alembic uses metadata to work out changes to database schema
+        self.metadata = metadata
+
+migrate = Migrate(app, DB(Base.metadata))  # then create an instance of Flask's Migrate class
+manager.add_command('db', MigrateCommand)  # and add all the commands in the Flask-Migrate script by calling add_command
 
 # setup the __main__ function to call from command line
 if __name__ == "__main__":
