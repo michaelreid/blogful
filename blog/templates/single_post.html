@@ -3,18 +3,6 @@
 
 {% block content %}
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-<div class="flashes danger">
-  {% for message in messages %}
-  <p>{{ message }}</p>
-  {% endfor %}
-  <a href="{{ url_for('confirm_delete', id=post.id) }}">Confirm</a>
-  <a href="{{ url_for('single_post', id=post.id) }}">Cancel</a>
-</div>
-{% endif %}
-{% endwith %}
-
 {{ macros.render_post(post) }}
 
 {% endblock %}
@@ -26,8 +14,12 @@
   <li class="previous small">
     <a href="{{ url_for('posts') }}" class="text=muted">&larr; Back</a>
   </li>
+
+  {% if g.user.is_authenticated() %}
   <li class="small col-md-4"><a href="{{ url_for('edit_post_get', id=post.id) }}">edit</a></li>
-  <li class="small col-md-4"><a href="{{ url_for('delete_post', id=post.id) }}">-delete post</a></li>
+  <li class="small col-md-4"><a href="{{ url_for('delete_post_get', id=post.id) }}">-delete post</a></li>
+  {% endif %}
+  
 </ul>
 
 

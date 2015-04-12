@@ -1,12 +1,15 @@
 {% import "macros.html" as macros %}
+
 {% extends "base.html" %}
+
+
 {% block content %}
 
+    {% for post in posts %}
 
-{% for post in posts %}
+    {{ macros.render_titles(post) }}
 
-{{ macros.render_titles(post) }}
-{% endfor %}
+    {% endfor %}
 
 {% endblock %}
 
@@ -23,9 +26,16 @@
   <a href="{{ url_for('posts', page=page + 1) }}" class="text-muted small">&larr; Older</a>
   </li>
   {% endif %}
-  
+
+  {% if g.user.is_authenticated() %}
+  <li class="small col-md-4"><a href="{{ url_for('logout') }}">log-out</a></li>
+  {% else %}
   <li class="small col-md-4"><a href="{{ url_for('login_get') }}">log-in</a></li>
+  {% endif %}
+  
+  {% if g.user.is_authenticated() %}
   <li class="small col-md-4"><a href="{{ url_for('add_post_get') }}">+post</a></li>
+  {% endif %}
 
   {% if has_prev %}
   <li class="text-right next">

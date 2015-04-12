@@ -1,27 +1,49 @@
 # setup the views for the blog
 
 # first import the render_template method
-from flask import render_template
+from flask import render_template, request, redirect, url_for, session, flash, g, Markup
 
 # import the other modules of the app
 from blog import app
 from .database import session
 from .models import Post
 
-@app.context_processor
-def single_post():
-    return dict(single_post=True)
+# to handle log-in
+from flask.ext.login import login_user, logout_user, login_required, current_user
+from werkzeug.security import check_password_hash
+from .models import User
+
+# now define POST method for /post/add
+import mistune
 
 
+##############################################
+      # # # DEFINE GLOBAL USER # # #
+###############################################    
+
+@app.before_request
+def before_request():
+    g.user = current_user
+
+##############################################
+     # # # DEFINE MARKDOWN FILTER # # #
+###############################################    
+
+@app.template_filter()
+def markdown(text):
+    return Markup(mistune.markdown(text,escape=True))
 
 ###############################################
       # # # VIEW ALL POSTS # # #
 ###############################################    
 
-# define the first view:
 @app.route("/")
 @app.route("/page/<int:page>")
-def posts(page=1, paginate_by=10):
+def posts(page=1, paginate_by=20):
+
+    # pass user variable to template
+    user = g.user
+    
     # zero-indexed pages
     page_index = page -1
     
@@ -52,40 +74,37 @@ def posts(page=1, paginate_by=10):
                            has_prev=has_prev,
                            page=page,
                            total_pages=total_pages,
+                           user=user
     )
 
 
 ###############################################
       # # # VIEW SINGLE POSTS # # #
 ###############################################    
-# define view for single post
+
 @app.route("/post/<int:id>")
 def single_post(id):
+    user = g.user
     post = session.query(Post).get(id)
     print post
     return render_template("single_post.html",
-                           post=post
+                           post=post,
+                           user=user
     )
 
 
 ###############################################
       # # # ADDING POSTS # # #
 ###############################################    
-# Define view for adding Posts, a form
-# the 'methods' argument in the decorator 
-# and protect posts by requiring login
-from flask.ext.login import login_required
-
+# Define view for adding Posts, a form.
+# The 'methods' argument in the decorator handles
+# two actions.
+# Need to secure posts by requiring login
 
 @app.route("/post/add", methods=["GET"])
 @login_required
 def add_post_get():
     return render_template("add_post.html")
-
-# now define POST method for /post/add
-import mistune
-from flask           import request, redirect, url_for
-from flask.ext.login import current_user
 
 
 @app.route("/post/add", methods=["POST"])
@@ -107,7 +126,6 @@ def add_post_post():
 # Define view for editing Post form
 # the 'methods' argument in the decorator 
 # defines this as only for GET calls to this view
-
 @app.route("/post/<id>/edit", methods=["GET"])
 @login_required    
 def edit_post_get(id):
@@ -117,9 +135,6 @@ def edit_post_get(id):
 
 # now define POST method for /post/add to save
 # the post to database
-import mistune
-from flask import request, redirect, url_for
-
 @app.route("/post/<id>/edit", methods=["POST"])
 @login_required
 def edit_post_post(id):
@@ -137,23 +152,25 @@ def edit_post_post(id):
       # # # DELETING POSTS # # #
 ###############################################    
 
-from flask import flash
-
 # define view for deleting a post - flash
 # message asking user that they want to delete
 # the current post
-@app.route("/post/<id>/delete")
+@app.route("/post/<id>/delete", methods=["GET"])
 @login_required
-def delete_post(id):
+def delete_post_get(id):
     post = session.query(Post).get(id)
-    flash("Are you sure you want to delete this post?", category='warning')
+
+    confirm = "<a href=\"/post/" + id + "/delete\" method=\"POST\" class=\"alert-link left-margin\">Confirm</a><a href=\"/post/" + id + "\" class=\"alert-link left-margin\">Cancel</a>"
+    
+    flash("Are you sure you want to delete this post?", category='danger')
     return render_template("single_post.html",
-                           post=post
+                           post=post,
+                           confirm=confirm
     )
 
-@app.route('/post/<id>/confirm_delete')
+@app.route("/post/<id>/delete", methods=["POST"])  
 @login_required    
-def confirm_delete(id):
+def delete_post_post(id):
     session.query(Post).get(id).delete(synchronize_session=False)
     session.commit()
     return redirect(url_for('posts'))
@@ -168,11 +185,6 @@ def login_get():
     return render_template('login.html')
 
 
-from flask import flash
-from flask.ext.login import login_user
-from werkzeug.security import check_password_hash
-from .models import User
-
 @app.route('/login', methods=['POST'])
 def login_post():
     email = request.form['email']
@@ -184,3 +196,14 @@ def login_post():
 
     login_user(user)
     return redirect(request.args.get('next') or url_for('posts'))
+
+###############################################
+      # # # LOG-OUT OF BLOG # # #
+###############################################    
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Logged Out", category='success')
+    return redirect(url_for('posts'))

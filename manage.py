@@ -17,7 +17,6 @@ def run():
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
 
-
 # setup the app manager to handle the posts
 from blog.models import Post
 from blog.database import session
@@ -33,7 +32,7 @@ def seed():
             title="Test Post #{}".format(i),
             content=content
         )
-        # add the posts to the session
+       # add the posts to the session
         session.add(post)
     # commit the posts to the database
     session.commit()
@@ -77,4 +76,3 @@ manager.add_command('db', MigrateCommand)  # and add all the commands in the Fla
 # setup the __main__ function to call from command line
 if __name__ == "__main__":
     manager.run()
-    manager.adduser()

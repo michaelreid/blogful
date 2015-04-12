@@ -35,6 +35,8 @@ class User(Base, UserMixin):                       # Creating the User model fro
     email = Column(String(128), unique=True)       # user's email must be a unique field
     password = Column(String(128))                 # user's password
     posts = relationship('Post', backref='author') # relationship between author and posts: one to many
-
+    def is_authenticated(self):
+        return True
+    
 # SQLAlchemy engine to create the tables
 Base.metadata.create_all(engine)
