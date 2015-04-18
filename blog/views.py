@@ -84,12 +84,12 @@ def posts(page=1, paginate_by=20):
 
 @app.route("/post/<int:id>")
 def single_post(id):
-    user = g.user
+    # user = g.user
     post = session.query(Post).get(id)
     print post
     return render_template("single_post.html",
                            post=post,
-                           user=user
+                           # user=user
     )
 
 
