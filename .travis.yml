@@ -1,0 +1,15 @@
+language: python
+python:
+  - "2.7"
+
+# How come doesn't do `source env/bin/activate`
+install: pip install -r requirements.txt
+
+env:
+  - CONFIG_PATH:blog.config.TravisConfig
+before_script:
+  - psql -c 'create database "blogful test";' -U postgres
+script:
+  - PYTHONPATH=. python tests/test_filter.py
+  - PYTHONPATH=. python tests/test_views_integration.py
+  - PYTHONPATH=. python tests/test_views_acceptance.py

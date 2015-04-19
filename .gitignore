@@ -7,3 +7,4 @@ tests/*.py~
 blog/templates/*.html~
 migrations/versions/*
 ghostdriver.log
+*.yml~
