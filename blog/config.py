@@ -17,6 +17,6 @@ class TestingConfig(object):
     # Set up a separate database for testing
     SQLALCHEMY_DATABASE_URI = "postgresql://action@localhost:5432/blogful-test"
     # Disable Debug mode 
-    DEBUG = False 
+    DEBUG = True
     # And use a different secret key than Development Config
     SECRET_KEY = "Not secret"
