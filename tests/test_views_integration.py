@@ -6,14 +6,13 @@ from urlparse import urlparse
 # Import werkzeug module that deals with storing passwords
 from werkzeug.security import generate_password_hash
 
+# Configure app to use the test database
+os.environ["CONFIG_PATH"] = "blog.config.TestingConfig" # string is path to TestConfig class
+
 # Import the appication and it's models and database classes & methods
 from blog import app
 from blog import models
 from blog.database import Base, engine, session
-
-# Configure app to use the test database
-os.environ["CONFIG_PATH"] = "blog.config.TestConfig" # string is path to TestConfig class
-
 
 
 # INTEGRATION TESTING the applications views
@@ -23,7 +22,7 @@ class TestViews(unittest.TestCase):
     def setUp(self):
         """ Test setup """
 
-        # Setting up a test client enables calls to model and view
+        # Setting up a test_client enables calls to views
         # so that can see responses and test integrations
         self.client = app.test_client()
 
@@ -56,14 +55,21 @@ class TestViews(unittest.TestCase):
             "post": "Test content"
         })
 
+        # Is the response from add_post_post() 302 (successful)
         self.assertEqual(response.status_code, 302)
+        # Is the redirect after post to the root /
         self.assertEqual(urlparse(response.location).path, "/")
+        # Did the blog only post 1 post
         posts = session.query(models.Post).all()
         self.assertEqual(len(post), 1)
 
+        # Is the post itself correct
         post = posts[0]
+        # Is the title in the post the same as that input
         self.assertEqual(post.title, "Test Post")
+        # Is the content the same as that input
         self.assertEqual(post.content, "<p>Test content</p>\n")
+        # Is the author the same as that input
         self.assertEqual(post.author, self.user)
     
 
@@ -75,10 +81,8 @@ class TestViews(unittest.TestCase):
         # Remove the tables and their data from the database
         Base.metadata.drop_all(engine)
 
-
-
 # Run test from command line
 if __name__ == "__main__":
-    unittest.main()
-        
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestViews)
+    unittest.TextTestRunner(verbosity=3).run(suite)        
 
